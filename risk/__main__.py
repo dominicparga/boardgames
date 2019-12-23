@@ -34,13 +34,12 @@ def parse_cmdline():
     # define args and parse them
 
     parser = argparse.ArgumentParser(description=
-        'This little repo serves as handy tool to get information in boardgames through  '
-        'calculation or simulation.'
+        'This little repo serves as handy tool to get information in boardgames through calculation or simulation.'
     )
 
-    help_msg = 'Defines the number of dice that should be thrown.'
+    help_msg = 'Defines the number of dice that should be thrown for the simulation.'
     parser.add_argument('-n', '--max-fight-rounds',
-        metavar=('MAX_DICE_THROWS'),
+        metavar=('MAX_FIGHT_ROUNDS'),
         action='store',
         type=int,
         default=100,
@@ -69,7 +68,6 @@ def parse_cmdline():
 
     #-------------------------------------------------------------------------#
     # finalize and return
-
     params = {}
 
     # logging-level
