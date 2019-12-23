@@ -84,8 +84,8 @@ def parse_cmdline():
     #-------------------------------------------------------------------------#
     # define args and parse them
 
-    description  = 'This little repo serves as handy tool to get information '
-    description += 'in boardgames through calculation or simulation.'
+    description  = 'Have you ever asked yourself in boardgame \'Risk\', what '
+    description += 'the winning-chance of your attackers/defenders is?'
     parser = argparse.ArgumentParser(description=description)
 
     # max-fight-rounds
