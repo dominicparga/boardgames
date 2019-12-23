@@ -1,5 +1,6 @@
 '''
-The main is parsing the cmdlines and calling respective modules.
+The main is parsing the cmdlines, starting the simulation and exporting
+the results, if wished.
 '''
 
 import argparse
