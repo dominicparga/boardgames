@@ -2,10 +2,10 @@
 The main is parsing the cmdlines and calling respective modules.
 '''
 
-import os
 import argparse
-import logging
 import json
+import logging
+import os
 
 import risk
 
