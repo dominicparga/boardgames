@@ -9,15 +9,11 @@ import risk
 class Risk(unittest.TestCase):
 
     def test_fight(self):
-        # set general simulation-params and init sim
-        params = {
-            'max-fight-rounds': 1,
-            'seed': 1577104599
-        }
-        sim = risk.Simulation(
-            seed=params['seed'],
-            max_fight_rounds=params['max-fight-rounds']
-        )
+        # set simulation-config and init sim
+        cfg = risk.SimulationConfig()
+        cfg.seed = 1577104599
+        cfg.max_fight_rounds = 1
+        sim = risk.Simulation(cfg)
 
         # dice_att, dice_def, expected_result
         expected = [

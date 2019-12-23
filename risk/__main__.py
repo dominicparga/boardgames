@@ -4,7 +4,6 @@ The main is parsing the cmdlines and calling respective modules.
 
 import os
 import argparse
-import datetime
 import logging
 import json
 
@@ -14,7 +13,6 @@ import risk
 # constants
 
 class Constants():
-
     class __Paths():
         def __init__(self):
             self._root = os.path.join(
@@ -47,6 +45,35 @@ class Constants():
 CONSTANTS = Constants()
 
 #-----------------------------------------------------------------------------#
+# config
+
+class Config():
+    def __init__(self):
+        self._sim = risk.SimulationConfig()
+        self._is_output_enabled = False
+        self._is_output_forced = False
+
+    @property
+    def sim(self):
+        return self._sim
+
+    @property
+    def is_output_enabled(self):
+        return self._is_output_enabled
+
+    @is_output_enabled.setter
+    def is_output_enabled(self, value):
+        self._is_output_enabled = value
+
+    @property
+    def is_output_forced(self):
+        return self._is_output_forced
+
+    @is_output_forced.setter
+    def is_output_forced(self, value):
+        self._is_output_forced = value
+
+#-----------------------------------------------------------------------------#
 # cmdline-parsing
 
 def parse_cmdline():
@@ -69,7 +96,6 @@ def parse_cmdline():
         dest='max_fight_rounds',
         action='store',
         type=int,
-        default=10_000,
         required=False,
         help=help_msg
     )
@@ -85,25 +111,26 @@ def parse_cmdline():
         help=help_msg
     )
 
-    # export results, even if file exists
-    help_msg  = 'Same as \'--export-results\' but forced '
-    help_msg += '(removing existing file).'
-    parser.add_argument('-of', '--export-results-forced',
-        dest='is_exporting_results_forced',
+    # enable output
+    help_msg  = 'If set, the simulation-results will be exported to the '
+    help_msg += 'specified path.'
+    parser.add_argument('-o', '--enable-output',
+        dest='is_output_enabled',
         action='store_true',
         required=False,
         help=help_msg
     )
 
-    # export results
-    help_msg  = 'If set, the simulation-results will be exported to the '
-    help_msg += 'specified path.'
-    parser.add_argument('-o', '--export-results',
-        dest='is_exporting_results',
+    # force output, even if file exists
+    help_msg  = 'Same as \'--enable-output\' but forced '
+    help_msg += '(removing existing file).'
+    parser.add_argument('-of', '--force-output',
+        dest='is_output_forced',
         action='store_true',
         required=False,
         help=help_msg
     )
+
 
     # logging-level
     help_msg = 'Sets the logging-level'
@@ -138,10 +165,8 @@ def parse_cmdline():
     args = parser.parse_args()
 
     #-------------------------------------------------------------------------#
-    # finalize and return
-    params = {'sim': {}}
-
     # logging-level
+
     if args.verbose:
         args.logging_level = logging.INFO
     elif args.logging_level is not None:
@@ -159,21 +184,17 @@ def parse_cmdline():
     logging.getLogger(__name__).setLevel(args.logging_level)
     logging.getLogger(risk.__name__).setLevel(args.logging_level)
 
-    # max-fight-rounds
-    params['sim']['max-fight-rounds'] = args.max_fight_rounds
-    # seed
-    if args.seed is not None:
-        params['sim']['seed'] = args.seed
-    else:
-        # milliseconds since epoch
-        epoch = datetime.datetime(1970, 1, 1)
-        now = datetime.datetime.now()
-        params['sim']['seed'] = int((now - epoch).total_seconds())
-    # export results
-    params['is_exporting_results'] = args.is_exporting_results
-    params['is_exporting_results_forced'] = args.is_exporting_results_forced
+    #-------------------------------------------------------------------------#
+    # finalize and return
 
-    return params
+    cfg = Config()
+
+    cfg.sim.max_fight_rounds = args.max_fight_rounds
+    cfg.sim.seed = args.seed
+    cfg.is_output_enabled = args.is_output_enabled
+    cfg.is_output_forced = args.is_output_forced
+
+    return cfg
 
 #-----------------------------------------------------------------------------#
 
@@ -183,32 +204,29 @@ if __name__ == '__main__':
     logger = logging.getLogger(__name__)
 
     # extract params
-    params = parse_cmdline()
+    cfg = parse_cmdline()
 
     # check export-path before running simulation
     # (and wasting time if out-file exists)
-    if not params['is_exporting_results_forced']:
-        if params['is_exporting_results']:
+    if not cfg.is_output_forced:
+        if cfg.is_output_enabled:
             if os.path.exists(CONSTANTS.paths.risk_output):
                 err_msg  = f'Output-file {CONSTANTS.paths.risk_output} does '
                 err_msg += 'already exist.'
                 logger.error(err_msg)
                 exit(1)
             else:
-                params['is_exporting_results_forced'] = True
+                cfg.is_output_forced = True
 
     #-------------------------------------------------------------------------#
     # simulate
 
-    sim = risk.Simulation(
-        seed=params['sim']['seed'],
-        max_fight_rounds=params['sim']['max-fight-rounds']
-    )
+    sim = risk.Simulation(cfg.sim)
     result = sim.monte_carlo()
-    result['params'] = params['sim']
+    result['config'] = cfg.sim.to_dict()
 
     # export results to a json-file
-    if params['is_exporting_results_forced']:
+    if cfg.is_output_forced:
         with open(CONSTANTS.paths.risk_output, 'w') as json_file:
             json.dump(result, json_file, indent=4)
 

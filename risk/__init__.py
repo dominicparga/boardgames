@@ -2,9 +2,50 @@
 todo
 '''
 
-import random
+import datetime
 import logging
+import random
+
+#-----------------------------------------------------------------------------#
+# logging
+
 logger = logging.getLogger(__name__)
+
+#-----------------------------------------------------------------------------#
+# config
+
+class SimulationConfig():
+    def __init__(self):
+        self._max_fight_rounds = 10_000
+
+        # milliseconds since epoch
+        epoch = datetime.datetime(1970, 1, 1)
+        now = datetime.datetime.now()
+        self._seed = int((now - epoch).total_seconds())
+
+    @property
+    def max_fight_rounds(self):
+        return self._max_fight_rounds
+
+    @max_fight_rounds.setter
+    def max_fight_rounds(self, n):
+        if n is not None:
+            self._max_fight_rounds = n
+
+    @property
+    def seed(self):
+        return self._seed
+
+    @seed.setter
+    def seed(self, new_seed):
+        if new_seed is not None:
+            self._seed = new_seed
+
+    def to_dict(self):
+        return {
+            'seed': self.seed,
+            'max-fight-rounds': self.max_fight_rounds
+        }
 
 #-----------------------------------------------------------------------------#
 
@@ -29,14 +70,14 @@ class Simulation():
     todo
     '''
 
-    def __init__(self, seed, max_fight_rounds):
+    def __init__(self, cfg):
         '''
         Initialize the simulation by setting up the datastructures
         '''
 
         # set general simulation-parameter
-        self._die = Die(seed)
-        self._max_fight_rounds = max_fight_rounds
+        self._die = Die(cfg.seed)
+        self._max_fight_rounds = cfg.max_fight_rounds
 
         # set specific simulation-parameter
         self._ad_counts = {}
