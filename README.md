@@ -4,7 +4,7 @@ This little repo serves as handy tool to get information in boardgames through c
 
 ## Usage
 
-Just run `py main.py`.
+Just run the script `./scripts/run.sh`, which first executes python-tests before running the `risk`-module.
 
 ## Results
 
@@ -24,15 +24,12 @@ Example: To get the result for 2 attackers vs. 2 defenders, you have to look at 
 
 |  %  | defended |  draw | defeated |
 |:---:|:--------:|:-----:|:--------:|
-|     |          |       |          |
 |     |          |  a=1  |          |
 | d=1 |   ??.??  | ??.?? |   ??.??  |
 | d=2 |   ??.??  | ??.?? |   ??.??  |
-|     |          |       |          |
 |     |          |  a=2  |          |
 | d=1 |   ??.??  | ??.?? |   ??.??  |
 | d=2 |   ??.??  | ??.?? |   ??.??  |
-|     |          |       |          |
 |     |          |  a=3  |          |
 | d=1 |   ??.??  | ??.?? |   ??.??  |
 | d=2 |   ??.??  | ??.?? |   ??.??  |
