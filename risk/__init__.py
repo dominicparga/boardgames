@@ -170,19 +170,3 @@ class Simulation():
         ad_counts['defended'] += result['defended']
         ad_counts['draw'] += result['draw']
         ad_counts['defeated'] += result['defeated']
-
-#-----------------------------------------------------------------------------#
-
-def run_sim(params):
-    '''
-    todo
-    '''
-
-    # extract params
-    sim = Simulation(
-        seed=params['seed'],
-        max_fight_rounds=params['max-fight-rounds']
-    )
-
-    # simulate
-    return sim.monte_carlo()
