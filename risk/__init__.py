@@ -185,7 +185,4 @@ def run_sim(params):
     )
 
     # simulate
-    ad_counts = sim.monte_carlo()
-
-    # calculate percentages and prepare output
-    logger.info(ad_counts)
+    return sim.monte_carlo()
