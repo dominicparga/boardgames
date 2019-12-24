@@ -68,8 +68,8 @@ def postprocess_risk(result):
     n = cfg['max-fight-rounds']
 
     # print README-result in markdown-syntax
-    print('|     %     | defended |  draw   | defeated |')
-    print('|:---------:|:--------:|:-------:|:--------:|')
+    print('| winner (%) | defenders  |   both   | attackers  |')
+    print('|:----------:|:----------:|:--------:|:----------:|')
 
     for key_att, dict_def in data.items():
         # get number of attackers
@@ -79,13 +79,31 @@ def postprocess_risk(result):
             d = key_def[-1]
             # calculate percentages from counts
             defended = counts['defended'] / n * 100
-            defended = f'{defended:2.0f}'
             draw = counts['draw'] / n * 100
-            draw = f'{draw:2.0f}'
             defeated = counts['defeated'] / n * 100
+            # prepare print and find winner
+            defended = f'{defended:2.0f}'
+            draw = f'{draw:2.0f}'
             defeated = f'{defeated:2.0f}'
-            # print
-            print(f'| `{a}>` `({d}` |    {defended}    |    {draw}   |    {defeated}    |')
+            if draw > defended:
+                if defeated > draw:
+                    defeated += '*'
+                    draw += ' '
+                    defended += ' '
+                else:
+                    defeated += ' '
+                    draw += '*'
+                    defended += ' '
+            else:
+                if defeated > defended:
+                    defeated += '*'
+                    draw += ' '
+                    defended += ' '
+                else:
+                    defeated += ' '
+                    draw += ' '
+                    defended += '*'
+            print(f'|  `{a}>` `({d}` |     {defended}    |    {draw}   |     {defeated}    |')
 
 #-----------------------------------------------------------------------------#
 # cmdline-parsing
