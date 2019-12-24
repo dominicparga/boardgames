@@ -34,7 +34,7 @@ In the following table
 - `draw` means, that the attacker and defender have lost one unit each.
 - `defeated` means, that the defender has lost all of its units.
 
-Example: To get the result for 2 attackers vs. 1 defenders, you have to look at the row `2> (1`.
+Example: To get the result for 2 attackers vs. 1 defender, you have to look at the row `2> (1`.
 
 |     %     | defended |  draw   | defeated |
 |:---------:|:--------:|:-------:|:--------:|
