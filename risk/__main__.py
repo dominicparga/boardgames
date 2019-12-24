@@ -233,6 +233,7 @@ if __name__ == '__main__':
     #-------------------------------------------------------------------------#
     # export results to a json-file
 
+    result = {'data': result}
     result['config'] = cfg.sim.to_dict()
     result['boardgame'] = CONSTANTS.boardgame
 
