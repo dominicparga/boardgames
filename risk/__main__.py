@@ -38,10 +38,15 @@ class Constants():
 
     def __init__(self):
         self._paths = Constants.__Paths()
+        self._boardgame = 'Risk'
 
     @property
     def paths(self):
         return self._paths
+
+    @property
+    def boardgame(self):
+        return self._boardgame
 
 CONSTANTS = Constants()
 
@@ -224,9 +229,13 @@ if __name__ == '__main__':
 
     sim = risk.Simulation(cfg.sim)
     result = sim.monte_carlo()
-    result['config'] = cfg.sim.to_dict()
 
+    #-------------------------------------------------------------------------#
     # export results to a json-file
+
+    result['config'] = cfg.sim.to_dict()
+    result['boardgame'] = CONSTANTS.boardgame
+
     if cfg.is_output_forced:
         with open(CONSTANTS.paths.risk_output, 'w') as json_file:
             json.dump(result, json_file, indent=4)

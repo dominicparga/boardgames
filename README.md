@@ -2,15 +2,29 @@
 
 This little repo serves as handy tool to get information in boardgames through calculation or simulation.
 
-## Usage
+## Boardgame: Risk
 
-Just run the script `./scripts/run.sh`, which first executes python-tests before running the `risk`-module.
+### Usage
 
-## Results
+```zsh
+# for testing
+py -m tests.risk
 
-In the following, all results are presented.
+# for simulating
+py -m risk --logging-level info --force-output
+```
 
-### Risk
+> Note:
+>
+> `py -m unittest test.risk`
+>
+> is executing the module unittest giving test.risk as parameter, while
+>
+> `python -m test.risk`
+>
+> executes test.risk, which calles `unittest.main()`
+
+### Results
 
 What is the percentage that 1-3 attackers defeat a defence of 1-2 defenders?
 
