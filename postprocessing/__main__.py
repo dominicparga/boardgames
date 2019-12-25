@@ -67,7 +67,11 @@ def postprocess_risk(result):
 
     n = cfg['max-fight-rounds']
 
+    #-------------------------------------------------------------------------#
+    # chance to win/draw/lose
+
     # print README-result in markdown-syntax
+
     print('| winner (%) |   defenders   |    both     |   attackers   |')
     print('|:----------:|--------------:|------------:|--------------:|')
 
@@ -76,6 +80,7 @@ def postprocess_risk(result):
         # since key_att looks like 'att=1'
         a = key_att[-1]
         for key_def, counts in dict_def.items():
+            counts = counts.copy()
             # get number of defenders
             # since key_def looks like 'def=1'
             d = key_def[-1]
@@ -98,6 +103,43 @@ def postprocess_risk(result):
             draw = counts['draw']
             defeated = counts['defeated']
             print(f'|  `{a}>` `({d}` |     {defended}    |    {draw}   |     {defeated}    |')
+
+    #-------------------------------------------------------------------------#
+    # chance to lose at least one unit
+
+    print()
+
+    # print README-result in markdown-syntax
+    print('| losing >= 1 unit (%) |   defenders   |   attackers   |')
+    print('|:--------------------:|--------------:|--------------:|')
+
+    for key_att, dict_def in data.items():
+        # get number of attackers
+        # since key_att looks like 'att=1'
+        a = key_att[-1]
+        for key_def, counts in dict_def.items():
+            counts = counts.copy()
+            # get number of defenders
+            # since key_def looks like 'def=1'
+            d = key_def[-1]
+            # sum up opposite counts to get chance of losing >= 1 unit
+            sorted_keys = sorted(counts.keys(), key=counts.get)
+            counts_lut = counts.copy()
+            for i, k_i in enumerate(sorted_keys):
+                loss_chance = 0
+                # actually sum up opposite counts
+                for j, k_j in enumerate(sorted_keys):
+                    if i != j:
+                        loss_chance += counts_lut[k_j]
+                counts[k_i] = loss_chance
+            # calculate percentages from counts
+            # and prepare print and find winner
+            for key, value in counts.items():
+                counts[key] = f'{(value / n * 100):2.0f}'
+            # actually print table-row
+            defended = counts['defended']
+            defeated = counts['defeated']
+            print(f'|      `{a}>` `({d}`       |       {defended}      |       {defeated}      |')
 
 #-----------------------------------------------------------------------------#
 # cmdline-parsing

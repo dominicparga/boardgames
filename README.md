@@ -31,13 +31,11 @@ py -m postprocessing --input ./build/risk.json
 
 What is the percentage that 1-3 attackers defeat a defence of 1-2 defenders?
 
-In the following table
+#### Winning chance
 
-- `defended` means, that the attacker has lost all of its units.
-- `draw` means, that the attacker and defender have lost one unit each.
-- `defeated` means, that the defender has lost all of its units.
+In the following table, winning means that all opposite units have been destroyed.
 
-Example: To get the result for 2 attackers vs. 1 defender, you have to look at the row `2> (1`.
+Example: To get the winning-chance for 2 attackers vs. 1 defender, you have to look at the row `2> (1`.
 
 | winner (%) |   defenders   |    both     |   attackers   |
 |:----------:|--------------:|------------:|--------------:|
@@ -47,3 +45,16 @@ Example: To get the result for 2 attackers vs. 1 defender, you have to look at t
 |  `2>` `(2` |     (*) 45    |        32   |         23    |
 |  `3>` `(1` |         35    |         0   |     (*) 65    |
 |  `3>` `(2` |         29    |        34   |     (*) 37    |
+
+#### Chance of losing at least 1 unit
+
+`(*)` means this team has the highest chance of winning the fight (see previous table).
+
+| losing >= 1 unit (%) |   defenders   |   attackers   |
+|:--------------------:|--------------:|--------------:|
+|      `1>` `(1`       |   (*) 42      |       58      |
+|      `1>` `(2`       |   (*) 25      |       75      |
+|      `2>` `(1`       |       57      |   (*) 43      |
+|      `2>` `(2`       |   (*) 55      |       77      |
+|      `3>` `(1`       |       65      |   (*) 35      |
+|      `3>` `(2`       |       71      |   (*) 63      |
