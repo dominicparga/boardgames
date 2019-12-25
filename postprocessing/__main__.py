@@ -68,41 +68,35 @@ def postprocess_risk(result):
     n = cfg['max-fight-rounds']
 
     # print README-result in markdown-syntax
-    print('| winner (%) | defenders  |   both   | attackers  |')
-    print('|:----------:|:----------:|:--------:|:----------:|')
+    print('| winner (%) |   defenders   |    both     |   attackers   |')
+    print('|:----------:|--------------:|------------:|--------------:|')
 
     for key_att, dict_def in data.items():
         # get number of attackers
+        # since key_att looks like 'att=1'
         a = key_att[-1]
         for key_def, counts in dict_def.items():
             # get number of defenders
+            # since key_def looks like 'def=1'
             d = key_def[-1]
             # calculate percentages from counts
-            defended = counts['defended'] / n * 100
-            draw = counts['draw'] / n * 100
-            defeated = counts['defeated'] / n * 100
-            # prepare print and find winner
-            defended = f'{defended:2.0f}'
-            draw = f'{draw:2.0f}'
-            defeated = f'{defeated:2.0f}'
-            if draw > defended:
-                if defeated > draw:
-                    defeated += '*'
-                    draw += ' '
-                    defended += ' '
+            # and prepare print and find winner
+            for key, value in counts.items():
+                counts[key] = f'{(value / n * 100):2.0f}'
+            # add prefixes for winner
+            winner_decorator = lambda v: f'(*) {v}'
+            loser_decorator  = lambda v: f'    {v}'
+            for i, key in enumerate(sorted(counts.keys(), key=counts.get)):
+                # sorted returns in ascending order
+                # if i is last element -> winner
+                if i is len(counts.keys())-1:
+                    counts[key] = f'{winner_decorator(counts[key])}'
                 else:
-                    defeated += ' '
-                    draw += '*'
-                    defended += ' '
-            else:
-                if defeated > defended:
-                    defeated += '*'
-                    draw += ' '
-                    defended += ' '
-                else:
-                    defeated += ' '
-                    draw += ' '
-                    defended += '*'
+                    counts[key] = f'{loser_decorator(counts[key])}'
+            # actually print table-row
+            defended = counts['defended']
+            draw = counts['draw']
+            defeated = counts['defeated']
             print(f'|  `{a}>` `({d}` |     {defended}    |    {draw}   |     {defeated}    |')
 
 #-----------------------------------------------------------------------------#

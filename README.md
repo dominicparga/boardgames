@@ -12,6 +12,9 @@ py -m tests.risk
 
 # for simulating
 py -m risk --logging-level info --force-output
+
+# for postprocessing
+py -m postprocessing --input ./build/risk.json
 ```
 
 > Note:
@@ -20,7 +23,7 @@ py -m risk --logging-level info --force-output
 >
 > is executing the module unittest giving test.risk as parameter, while
 >
-> `python -m test.risk`
+> `py -m test.risk`
 >
 > executes test.risk, which calles `unittest.main()`
 
@@ -36,11 +39,11 @@ In the following table
 
 Example: To get the result for 2 attackers vs. 1 defender, you have to look at the row `2> (1`.
 
-|     %     | defended |  draw   | defeated |
-|:---------:|:--------:|:-------:|:--------:|
-| `1>` `(1` |    59    |     0   |    41    |
-| `1>` `(2` |    76    |     0   |    24    |
-| `2>` `(1` |    42    |     0   |    58    |
-| `2>` `(2` |    44    |    32   |    23    |
-| `3>` `(1` |    33    |     0   |    67    |
-| `3>` `(2` |    29    |    34   |    38    |
+| winner (%) |   defenders   |    both     |   attackers   |
+|:----------:|--------------:|------------:|--------------:|
+|  `1>` `(1` |     (*) 58    |         0   |         42    |
+|  `1>` `(2` |     (*) 75    |         0   |         25    |
+|  `2>` `(1` |         43    |         0   |     (*) 57    |
+|  `2>` `(2` |     (*) 45    |        32   |         23    |
+|  `3>` `(1` |         35    |         0   |     (*) 65    |
+|  `3>` `(2` |         29    |        34   |     (*) 37    |
